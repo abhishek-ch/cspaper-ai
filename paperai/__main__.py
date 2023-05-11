@@ -19,11 +19,8 @@ if __name__ == '__main__':
     else:
         load_config(config_file_path)
 
-
     if sys.argv[1].lower() == "upload":
         upload()
     else:
         # execute(sys.argv[1])
         streamlit.web.bootstrap.run("paperai/newapp.py", sys.argv[1], [], [])
-
-    # verify_prompt(sys.argv[1])CG15 20060002251
