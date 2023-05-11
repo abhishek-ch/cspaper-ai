@@ -1,0 +1,11 @@
+langchain
+openai
+tiktoken
+pypdf
+qdrant-client
+langchain-serve
+pyarrow<10.1.0,>=10.0.1
+streamlit==1.19.0
+watchdog==2.3.1
+python-decouple==3.8
+protoc >= 3.19.0
