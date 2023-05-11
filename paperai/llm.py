@@ -26,5 +26,5 @@ class ChatLLM(BaseModel):
         super().__init__(**kwargs)
         self.llm = get_model(model)
 
-    def generate(self, prompt: str, stop: List[str] = None):
+    def generate(self, prompt: str, stop: List[str] = None) -> BaseOpenAI:
         return self.llm([HumanMessage(content=prompt)], stop=stop)

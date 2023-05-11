@@ -21,16 +21,6 @@ def load_chat_names():
 
 st.set_page_config(layout='wide')
 
-# if 'main' not in st.session_state:
-#     with open('main.json', 'r') as f:
-#         st.session_state['main'] = json.load(f)
-
-#     if 'api_key' in st.session_state['main']:
-#         oa.api_key = st.session_state['main']['api_key']
-#         oa.api_type = "azure"
-#         oa.api_base = "https://openai-testing-instance.openai.azure.com/"
-#         oa.api_version = "2023-03-15-preview"
-
 if 'tooltips' not in st.session_state:
     with open('tooltips.json', 'r') as f:
         st.session_state['tooltips'] = json.load(f)
@@ -72,16 +62,7 @@ current_chat = st.session_state['current_chat']
 
 #### SIDEBAR
 with st.sidebar:
-    st.title('PaperAI')
-
-    with st.expander('Global parameters', expanded=False):
-        def api_key_changed():
-            st.session_state['main']['api_key'] = st.session_state['api_key_input']
-
-            # with open('main.json', 'w') as f:
-            #     json.dump(st.session_state['main'], f)
-
-        st.text_input('API key',"")
+    st.title('CSPaper-AI')
 
     if st.button('New chat', use_container_width=True):
         current_chat.save()
@@ -131,55 +112,9 @@ with st.sidebar:
                     st.experimental_rerun()
 
 
-col1, col2 = st.columns([3, 1])
+# col1, col2 = st.columns([3, 1])
 
-#### PARAMETERS
-with st.expander('Parameters'):
-    system_tokens = current_chat.messages['tokens']
-    system_prompt = st.text_area('System prompt (tokens: %d)' % system_tokens, value=current_chat.messages['content'],
-                                 help=st.session_state['tooltips']['system_prompt'])
-    current_chat.messages['content'] = system_prompt
-    current_chat.count_tokens(current_chat.messages)
-
-    col1, col2, col3, _, col4 = st.columns([1, 1, 1, 3, 1])
-
-    with col1:
-        current_chat.temperature = st.slider('Temperature', min_value=0.0, max_value=1.0,
-                                             value=current_chat.temperature,
-                                             help=tooltips['temperature'])
-        current_chat.top_p = st.slider('Top P', min_value=0.0, max_value=1.0, value=current_chat.top_p,
-                                       help=tooltips['top_p'])
-
-    with col2:
-        current_chat.max_tokens = st.slider('Maximum length', min_value=1, max_value=min(4096 - system_tokens - 1, 2048),
-                                            value=min(current_chat.max_tokens, 4096 - system_tokens - 1), help=tooltips['max_tokens'])
-
-        current_chat.max_context_tokens = st.slider('Maximum context length', min_value=system_tokens,
-                                                    max_value=4096 - current_chat.max_tokens,
-                                                    value=min(4096 - current_chat.max_tokens, max(system_tokens, current_chat.max_context_tokens)),
-                                                    help=tooltips['max_context_tokens'])
-
-    with col3:
-        current_chat.frequency_penalty = st.slider('Frequency penalty', min_value=-2.0, max_value=2.0,
-                                                   value=current_chat.frequency_penalty,
-                                                   help=tooltips['frequency_penalty'])
-        current_chat.presence_penalty = st.slider('Presence penalty', min_value=-2.0, max_value=2.0,
-                                                  value=current_chat.presence_penalty,
-                                                  help=tooltips['presence_penalty'])
-
-    with col4:
-        prompts = sorted(os.listdir('prompts'))
-
-        def load_prompt():
-            with open('prompts/%s' % st.session_state['prompt_file'], 'r', encoding='utf-8') as f:
-                current_chat.messages['content'] = f.read()
-                current_chat.count_tokens(current_chat.messages)
-                current_chat.save()
-
-        st.selectbox('Load system prompt', prompts, on_change=load_prompt, key='prompt_file', disabled=False)
-
-    if st.button('Save parameters'):
-        current_chat.save()
+st.title('CSPaper-AI: Computer Science Paper Reader')
 
 #### PROMPT
 with st.form('prompt', clear_on_submit=True):
@@ -238,8 +173,8 @@ for i, m in path[::-1]:
                 current_chat.save()
                 st.experimental_rerun()
 
-        with col5:
-            st.markdown('Tokens: %d, Context tokens: %d' % (m['tokens'], m['context_tokens']))
+        # with col5:
+        #     st.markdown('Tokens: %d, Context tokens: %d' % (m['tokens'], m['context_tokens']))
 
         with col6:
             def version_changed(i):

@@ -18,7 +18,7 @@ def get_model(model_name:str) -> BaseOpenAI:
 
 def execute(question: str, model:str="gpt-35-turbo") -> dict[str,str]:
     print("****************Execute DB interface*******************")
-    print(f"Question {question}")
+    # print(f"Question {question}")
     # llm = get_model(model_name=model)
     chatllm = ChatLLM(model=model)
     chain = load_qa_chain(chatllm.llm)
@@ -43,15 +43,16 @@ def execute(question: str, model:str="gpt-35-turbo") -> dict[str,str]:
 
     vectordb_chain = UploadInVectorDB(chain=chain, vectordb=db)
     # Initialize your custom Tool
-    upload_in_vectordb_tool = Tool(
-        name="Upload Vector Database",
-        func=vectordb_chain.run,
-        description="""
-        useful for when you need to upload documents from a location to the qdrant vector database.
-        The tool is useful for extracting embeddings and upload it to the
-        collection cs_papers of  Qdrant vector database
-        """
-    )
+    # TODO Activate this tool after further testing
+    # upload_in_vectordb_tool = Tool(
+    #     name="Upload Vector Database",
+    #     func=vectordb_chain.run,
+    #     description="""
+    #     useful for when you need to upload documents from a location to the qdrant vector database.
+    #     The tool is useful for extracting embeddings and upload it to the
+    #     collection cs_papers of  Qdrant vector database
+    #     """
+    # )
 
     tools = [cs_paper_tool]
 
@@ -73,14 +74,12 @@ def execute(question: str, model:str="gpt-35-turbo") -> dict[str,str]:
     
     try:
         result = agent.run(question)
-        print(result)
-        print("*"*100)
-        print(f"PDF References are: {agent.pdf_details.get('source')}")
-        print(f"Another: {agent.pdf_details.get('page')}")
+        # print(result)
+        # print(f"PDF References are: {agent.pdf_details.get('source')}")
+        # print(f"Another: {agent.pdf_details.get('page')}")
         return {"response": result, "metadata": agent.pdf_details}
     except Exception as err:
-        print("Crashed++")
-        print(err)
+        print(f"Crashed++ \n {err}")
     finally:
         print(f"Resetting db....")
         db.reset()

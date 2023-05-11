@@ -6,7 +6,7 @@ from langchain.document_loaders import PyPDFDirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from qdrant_client.http import models
 
-def upload(model:str="gpt-35-turbo") -> str:
+def upload(model:str="gpt-35-turbo") -> None:
     chatllm = ChatLLM(model=model)
     embeddings = OpenAIEmbeddings(model="text-embedding-ada-002",chunk_size=1)
     loader = PyPDFDirectoryLoader(pdf_uploadpath)

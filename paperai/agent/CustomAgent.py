@@ -39,14 +39,10 @@ class CustomAgent(BaseModel):
         while num_loops < self.max_loops:
             num_loops += 1
             curr_prompt = self.prompt.format(previous_responses=('\n'.join(previous_responses)))
-            print(f"curr_prompt {curr_prompt}")
             output, tool, tool_input = self._get_next_action(curr_prompt)
-            print(output, tool, tool_input)
             if tool == 'Final Answer':
                 return tool_input
-            print("Did it run")
             tool_result = name_to_tool_map[tool].run(tool_input)
-            print("tool_result {tool_result}")
             if tool_result:
                 full_result = tool_result.split("***%")
                 if len(full_result) > 1:
@@ -61,9 +57,7 @@ class CustomAgent(BaseModel):
 
     def _get_next_action(self, prompt: str) -> Tuple[str, str, str]:
         # Use the LLM to generate the Agent's next action
-        print("in _get_next_action")
         result = self.chatllm.generate(prompt, stop=self.stop_pattern).content
-        print("access _get_next_action")
         # Parse the result
         tool, tool_input = self._get_tool_and_input(result)
         return result, tool, tool_input

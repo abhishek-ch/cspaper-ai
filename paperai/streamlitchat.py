@@ -112,24 +112,19 @@ class Chat:
         if not result_dict:
             self.add_message("ERROR", index=index, role="assistant")
         else:
-            result_fmt = result_dict.get('response')
-            metadata = result_dict.get("metadata")
+            result_fmt = result_dict.get('response',None)
+            metadata = result_dict.get("metadata",None)
         
-        # print(f"Final Result {result}")
-        if metadata:
-            source = metadata.get("source")
-            page = metadata.get("page")
-            content = metadata.get("content")
-            result_fmt += f'\n ## PDF REFERENCE \n'
-            result_fmt += f" <code>{source} {page}</code> \n"
-            result_fmt += f" :pencil: :green{content}"
-            # __PDF CONTENT:__
-            # ```
-            # {metadata.get("source")} {metadata.get("page")}```
-            # _{metadata.get("content")}_
-            # """
-        self.add_message(result_fmt, index=index, role="assistant")
-        # self.add_message(self.chat_completion([self.messages] + path[i:]), index=index, role='user')
+            # print(f"Final Result {result}")
+            if metadata:
+                source = metadata.get("source")
+                page = metadata.get("page")
+                content = metadata.get("content")
+                result_fmt += f"\n ## PDF REFERENCE \n"
+                result_fmt += f" :red <code>{source} {page}</code> \n"
+                result_fmt += f" :pencil: :green "
+                result_fmt += f"> {content}"
+            self.add_message(result_fmt, index=index, role="assistant")
 
     def chat_completion(self, path):
         conversation = {
@@ -144,16 +139,3 @@ class Chat:
 
         all_messages = conversation['messages']
         return paperai.execute(all_messages[len(all_messages)-1]['content'])
-        # return conversation['messages']
-
-        # response = oa.ChatCompletion.create(**conversation)
-
-        # # response = oa.ChatCompletion.create(
-        # #         engine="gpt-35-turbo", # The deployment name you chose when you deployed the ChatGPT or GPT-4 model.
-        # #         messages = [{'role': m['role'], 'content': m['content']} for m in path],
-        # #         temperature=.7,
-        # #         max_tokens=self.max_tokens,
-        # #     )
-        # response['choices'][0]['message']['content'] = response['choices'][0]['message']['content'].strip()
-
-        # return response['choices'][0]['message']['content']
