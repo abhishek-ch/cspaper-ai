@@ -5,7 +5,6 @@ from langchain.document_loaders import PyPDFDirectoryLoader
 from langchain.vectorstores import Qdrant
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.agents import Tool
-from paperai import paper_chat
 from paperai.config import *
 from qdrant_client import QdrantClient, models
 from langchain.vectorstores import Qdrant
